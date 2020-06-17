@@ -11,10 +11,38 @@ pipeline {
                  aquaMicroscanner imageName: 'alpine:latest', notCompliesCmd: 'exit 1', onDisallowed: 'fail', outputFormat: 'html'
               }
          }     
-         stage('Check S3 availability') {
+         stage('Check S3 availability for master') {
               steps {
                   sh '''
-                     response=$(curl -s -o /dev/null -w "%{http_code}\n" http://jenkins-static-bucket-sagarnil.s3-website.ap-south-1.amazonaws.co)
+                     response=$(curl -s -o /dev/null -w "%{http_code}\n" http://jenkins-static-bucket-sagarnil.s3-website.ap-south-1.amazonaws.com)
+                     if [ "$response" != "200" ]
+                     then
+                      exit 1
+                     fi
+                  '''
+              }
+         }    
+         stage('Check S3 availability for development branch') {
+              when {
+                branch 'Development'
+              }
+              steps {
+                  sh '''
+                     response=$(curl -s -o /dev/null -w "%{http_code}\n" http://jenkins-static-bucket-sagarnil-development.s3-website.ap-south-1.amazonaws.com)
+                     if [ "$response" != "200" ]
+                     then
+                      exit 1
+                     fi
+                  '''
+              }
+         }    
+         stage('Check S3 availability for development branch') {
+              when {
+                branch 'Deployment'
+              }
+              steps {
+                  sh '''
+                     response=$(curl -s -o /dev/null -w "%{http_code}\n" http://jenkins-static-bucket-sagarnil-deployment.s3-website.ap-south-1.amazonaws.com)
                      if [ "$response" != "200" ]
                      then
                       exit 1
