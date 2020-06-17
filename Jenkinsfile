@@ -10,7 +10,18 @@ pipeline {
               steps { 
                  aquaMicroscanner imageName: 'alpine:latest', notCompliesCmd: 'exit 1', onDisallowed: 'fail', outputFormat: 'html'
               }
-         }         
+         }     
+         stage('Check S3 availability') {
+              steps {
+                  sh '''
+                     response=$(curl -s -o /dev/null -w "%{http_code}\n" http://jenkins-static-bucket-sagarnil.s3-website.ap-south-1.amazonaws.com)
+                     if [ "$response" != "200" ]
+                     then
+                      exit 1
+                     fi
+                  '''
+              }
+         }    
          stage('Upload to AWS') {
               steps {
                   withAWS(region:'ap-south-1') {
