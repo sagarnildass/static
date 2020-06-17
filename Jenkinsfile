@@ -36,7 +36,7 @@ pipeline {
                   '''
               }
          }    
-         stage('Check S3 availability for development branch') {
+         stage('Check S3 availability for deployment branch') {
               when {
                 branch 'Deployment'
               }
