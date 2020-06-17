@@ -14,7 +14,7 @@ pipeline {
          stage('Check S3 availability') {
               steps {
                   sh '''
-                     response=$(curl -s -o /dev/null -w "%{http_code}\n" http://jenkins-static-bucket-sagarnil.s3-website.ap-south-1.amazonaws.com)
+                     response=$(curl -s -o /dev/null -w "%{http_code}\n" http://jenkins-static-bucket-sagarnil.s3-website.ap-south-1.amazonaws.co)
                      if [ "$response" != "200" ]
                      then
                       exit 1
