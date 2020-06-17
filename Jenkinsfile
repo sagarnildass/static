@@ -19,5 +19,27 @@ pipeline {
                   }
               }
          }
+         stage('Deliver for development to AWS') {
+            when {
+                branch 'Development'
+            }
+            steps {
+                  withAWS(region:'ap-south-1') {
+                  sh 'echo "Uploading content with AWS creds"'
+                      s3Upload(pathStyleAccessEnabled: true, payloadSigningEnabled: true, file:'index_development.html', bucket:'jenkins-static-bucket-sagarnil-development')
+                  }
+              }
+        }
+        stage('Deploy for production to AWS') {
+            when {
+                branch 'Deployment'
+            }
+            steps {
+                  withAWS(region:'ap-south-1') {
+                  sh 'echo "Uploading content with AWS creds"'
+                      s3Upload(pathStyleAccessEnabled: true, payloadSigningEnabled: true, file:'index_deployment.html', bucket:'jenkins-static-bucket-sagarnil-deployment')
+                  }
+              }
+        }
      }
 }
