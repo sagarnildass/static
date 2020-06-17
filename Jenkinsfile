@@ -12,6 +12,9 @@ pipeline {
               }
          }     
          stage('Check S3 availability for master') {
+              when {
+                branch 'master'
+              }
               steps {
                   sh '''
                      response=$(curl -s -o /dev/null -w "%{http_code}\n" http://jenkins-static-bucket-sagarnil.s3-website.ap-south-1.amazonaws.com)
