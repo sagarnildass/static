@@ -54,6 +54,9 @@ pipeline {
               }
          }    
          stage('Upload to AWS') {
+              when {
+                branch 'master'
+            }
               steps {
                   withAWS(region:'ap-south-1') {
                   sh 'echo "Uploading content with AWS creds"'
@@ -61,7 +64,7 @@ pipeline {
                   }
               }
          }
-         stage('Deliver for development to AWS') {
+         stage('Upload to AWS for development') {
             when {
                 branch 'Development'
             }
@@ -72,7 +75,7 @@ pipeline {
                   }
               }
         }
-        stage('Deploy for production to AWS') {
+        stage('Upload to AWS for deployment') {
             when {
                 branch 'Deployment'
             }
